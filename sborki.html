@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DarkFrame – Каталог игровых ПК</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    body {
+      background-color: #0d0b1d; /* Тёмный космический фон */
+      color: #fff; /* Белый текст для лучшей читаемости */
+      font-family: 'Open Sans', sans-serif; 
+    }
+
+    /* 
+    Стилизую навигационную панель:
+    - Тёмный фон с фиолетовыми акцентами
+    - Гибкое расположение элементов
+    - Адаптация под мобильные устройства
+    */
+    .custom-navbar {
+      background-color: #1a1a2e; /* Тёмно-синий фон */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 40px;
+      flex-wrap: wrap;
+    }
+
+    /* Располагаю ссылки в навигации с отступами */
+    .nav-left,
+    .nav-right {
+      display: flex;
+      gap: 20px;
+    }
+
+    /* 
+    Центральный логотип с эффектом "плавающей" панели
+    Использую шрифт Audiowide для геймерского стиля
+    */
+    .nav-center {
+      background-color: #222246; /* Фиолетово-синий фон */
+      padding: 8px 40px;
+      border-radius: 0 0 20px 20px; /* Скругление только снизу */
+      font-family: 'Audiowide', cursive; 
+      font-size: 1.8rem; /* Крупный размер */
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    /* Стили для навигационных ссылок с эффектом при наведении */
+    .nav-link-custom {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s ease; /* Плавное изменение цвета */
+    }
+
+    /* Эффект при наведении - фиолетовый цвет */
+    .nav-link-custom:hover {
+      color: #6f42c1; 
+    }
+
+    /* Отступ для иконки пользователя */
+    .bi-person-circle {
+      margin-right: 5px;
+    }
+
+    /* 
+    Адаптация навигации для мобильных устройств:
+    - Вертикальное расположение элементов
+    - Центрирование содержимого
+    */
+    @media (max-width: 991px) {
+      .custom-navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 20px;
+      }
+      .nav-left,
+      .nav-right {
+        justify-content: center;
+        margin: 10px 0;
+        flex-wrap: wrap;
+      }
+    }
+    
+    /* 
+    Стили для карточек товаров:
+    - Тёмный фон с контрастной рамкой
+    - Неоновая подсветка
+    - Flex-расположение элементов
+    */
+    .card {
+      background-color: #1a162e; /* Тёмный фон */
+      border: 1px solid #2c2a4a; /* Светлая рамка */
+      border-radius: 15px; /* Скругленные углы */
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1); /* Лёгкое свечение */
+      display: flex;
+      flex-direction: column; /* Вертикальное расположение */
+      height: 100%; /* Занимает всю доступную высоту */
+    }
+
+    /* Изображение в карточке товара */
+    .card-img-top {
+      border-radius: 15px 15px 0 0; /* Скругление только сверху */
+      object-fit: cover; /* Заполнение области */
+      height: 660px; /* Фиксированная высота */
+      width: 100%;
+      max-width: 1024px;
+    }
+
+    .btn-buy {
+      background-color: #6f42c1; /* Фиолетовый */
+      border: none;
+      color: #fff;
+      margin-top: auto; /* Прижимает кнопку к низу карточки */
+    }
+
+    /* Эффект при наведении на кнопку */
+    .btn-buy:hover {
+      background-color: #5936a2; /* Тёмно-фиолетовый */
+    }
+
+    /* Стиль для кнопки авторизации */
+    .btn-auth {
+      background-color: #6f42c1;
+      border: none;
+      color: #fff;
+      margin-top: auto;
+    }
+
+    /* Эффект при наведении на кнопку авторизации */
+    .btn-auth:hover {
+      background-color: #5936a2;
+    }
+
+    /* Стиль подвала сайта */
+    .footer {
+      background-color: #1a162e;
+      color: #888; /* Серый текст */
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+
+    /* Стиль для списка характеристик */
+    .specs {
+      font-size: 0.9rem; /* Чуть уменьшенный размер */
+      color: #ccc; /* Светло-серый цвет */
+    }
+
+    /* Контейнер для всплывающих уведомлений */
+    .toast-container {
+      position: fixed; /* Фиксированное положение */
+      top: 20px;
+      right: 20px;
+      z-index: 1055; /* Поверх других элементов */
+    }
+
+    /* Стиль для подсказок в полях ввода */
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6); /* Полупрозрачный белый */
+    }
+  </style>
+</head>
+<body>
+    <!-- 
+    Навигационная панель сайта:
+    - Логотип по центру
+    - Основные разделы слева
+    - Корзина и авторизация справа
+    -->
+    <header class="custom-navbar">
+        <!-- Левая часть с ссылками на основные разделы -->
+        <div class="nav-left">
+          <a href="sborki.html" class="nav-link-custom">Сборки</a>
+          <a href="main.html#support" class="nav-link-custom">Поддержка</a>
+          <a href="main.html#about" class="nav-link-custom">О нас</a>
+        </div>
+      
+        <!-- Центральный логотип с ссылкой на главную -->
+        <a href="main.html" class="nav-center">
+          DarkFrame
+        </a>
+      
+        <!-- Правая часть с корзиной и авторизацией -->
+        <div class="nav-right">
+          <a href="#" class="nav-link-custom" data-bs-toggle="modal" data-bs-target="#cartModal">Корзина</a>
+          
+          <a href="#" class="nav-link-custom" data-bs-toggle="modal" data-bs-target="#authModal">
+            <i class="bi bi-person-circle"></i>Авторизация
+          </a>
+        </div>
+    </header>
+    
+    <!-- 
+    Основной контейнер каталога товаров:
+    - Сетка из 6 карточек (2 в ряд на мобильных, 3 на десктопах)
+    - Отступы между карточками
+    -->
+    <div class="container py-5">
+        <div class="row g-4">
+          
+          <!-- ========== КАРТОЧКА ТОВАРА 1: DarkFrame Pulse ========== -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <img src="photo/PCPulse.jpg" class="card-img-top" alt="DarkFrame Pulse">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title text-white mb-4">DarkFrame Pulse</h5>
+                <p class="text-white mt-4">Идеально подойдёт для стримов и повседневных игр</p>
+                <ul class="specs">
+                  <li>Процессор: AMD Ryzen 5 5600</li>
+                  <li>Видеокарта: NVIDIA RTX 3060 12GB</li>
+                  <li>ОЗУ: 16GB DDR4 3200MHz</li>
+                  <li>SSD: 500GB NVMe</li>
+                  <li>Материнская плата: B550M</li>
+                  <li>БП: 600W 80+ Bronze</li>
+                  <li>Охлаждение: Воздушное, ARGB</li>
+                  <li>Корпус: Mid Tower с неоном</li>
+                </ul>
+                <button class="btn btn-buy w-100">Купить</button>
+              </div>
+            </div>
+          </div>
+      
+          <!-- ========== КАРТОЧКА ТОВАРА 2: DarkFrame Nova ========== -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <img src="photo/PCNova.jpg" class="card-img-top" alt="DarkFrame Nova">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title text-white mb-4">DarkFrame Nova</h5>
+                <p class="text-white mt-4">Идеален для стримеров и креаторов</p>
+                <ul class="specs">
+                  <li>Процессор: Intel Core i5-13400F</li>
+                  <li>Видеокарта: RTX 4060 Ti 8GB</li>
+                  <li>ОЗУ: 32GB DDR4 3600MHz</li>
+                  <li>SSD: 1TB NVMe</li>
+                  <li>Материнская плата: B660</li>
+                  <li>БП: 650W 80+ Bronze</li>
+                  <li>Охлаждение: СЖО 240 мм с RGB</li>
+                  <li>Корпус: RGB-стекло, фронт. подсветка</li>
+                </ul>
+                <button class="btn btn-buy w-100">Купить</button>
+              </div>
+            </div>
+          </div>
+      
+          <!-- ========== КАРТОЧКА ТОВАРА 3: DarkFrame Phantom ========== -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <img src="photo/PCPhantom.jpg" class="card-img-top" alt="DarkFrame Phantom">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title text-white mb-4">DarkFrame Phantom</h5>
+                <p class="text-white mt-4">Компактный, почти бесшумный, с фокусом на охлаждении</p>
+                <ul class="specs">
+                  <li>Процессор: AMD Ryzen 7 7700</li>
+                  <li>Видеокарта: RTX 4070 12GB</li>
+                  <li>ОЗУ: 32GB DDR5 5200MHz</li>
+                  <li>SSD: 1TB Gen4 NVMe</li>
+                  <li>Материнская плата: B650 ITX</li>
+                  <li>БП: 750W 80+ Gold</li>
+                  <li>Охлаждение: Бесшумная СЖО + шумоизоляция</li>
+                  <li>Корпус: ITX с неоном</li>
+                </ul>
+                <button class="btn btn-buy w-100">Купить</button>
+              </div>
+            </div>
+          </div>
+      
+          <!-- ========== КАРТОЧКА ТОВАРА 4: DarkFrame Overdrive ========== -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <img src="photo/PCOverdrive.jpg" class="card-img-top" alt="DarkFrame Overdrive">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title text-white mb-4">DarkFrame Overdrive</h5>
+                <p class="text-white mt-4">Максимальная мощность для 4K-гейминга</p>
+                <ul class="specs">
+                  <li>Процессор: Intel Core i9-14900K</li>
+                  <li>Видеокарта: NVIDIA RTX 4090 24GB</li>
+                  <li>ОЗУ: 64GB DDR5 6000MHz</li>
+                  <li>SSD: 2TB Gen4 NVMe</li>
+                  <li>Материнская плата: Z790</li>
+                  <li>БП: 1000W 80+ Platinum</li>
+                  <li>Охлаждение: Кастомная СЖО</li>
+                  <li>Корпус: Full Tower с неон-подсветкой</li>
+                </ul>
+                <button class="btn btn-buy w-100">Купить</button>
+              </div>
+            </div>
+          </div>
+      
+          <!-- ========== КАРТОЧКА ТОВАРА 5: DarkFrame Inferno ========== -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <img src="photo/PCInferno.jpg" class="card-img-top" alt="DarkFrame Inferno">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title text-white mb-4">DarkFrame Inferno</h5>
+                <p class="text-white mt-4">Синий стиль и высокая производительность</p>
+                <ul class="specs">
+                  <li>Процессор: AMD Ryzen 9 7900X</li>
+                  <li>Видеокарта: Radeon RX 7900 XTX</li>
+                  <li>ОЗУ: 32GB DDR5 5600MHz</li>
+                  <li>SSD: 1TB NVMe + 2TB HDD</li>
+                  <li>Материнская плата: X670</li>
+                  <li>БП: 850W 80+ Gold</li>
+                  <li>Охлаждение: СЖО с синей подсветкой</li>
+                  <li>Корпус: Прозрачный, синяя тема</li>
+                </ul>
+                <button class="btn btn-buy w-100">Купить</button>
+              </div>
+            </div>
+          </div>
+      
+          <!-- ========== КАРТОЧКА ТОВАРА 6: DarkFrame ZeroLag ========== -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <img src="photo/PCZeroLag.jpg" class="card-img-top" alt="DarkFrame ZeroLag">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title text-white mb-4">DarkFrame ZeroLag</h5>
+                <p class="text-white mt-4">Для киберспортсменов: ноль лагов, максимум FPS</p>
+                <ul class="specs">
+                  <li>Процессор: Intel Core i7-13700KF</li>
+                  <li>Видеокарта: RTX 4080 Super</li>
+                  <li>ОЗУ: 32GB DDR5 6000MHz</li>
+                  <li>SSD: 1TB Gen4 NVMe</li>
+                  <li>Материнская плата: Z690</li>
+                  <li>БП: 850W 80+ Gold</li>
+                  <li>Охлаждение: СЖО с LCD-дисплеем</li>
+                  <li>Корпус: Airflow-профиль, стильный дизайн</li>
+                </ul>
+                <button class="btn btn-buy w-100">Купить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- футер -->
+    <div class="footer">
+        © 2023–2025 DarkFrame. Все права защищены.
+    </div>
+
+    <!-- Контейнер для всплывающих уведомлений -->
+    <div class="toast-container">
+        <div id="welcomeToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+          <div class="d-flex">
+            <div class="toast-body">
+              Добро пожаловать!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+          </div>
+        </div>
+    </div>
+    
+    <!-- Контейнер для уведомлений о добавлении в корзину -->
+    <div class="toast-container">
+        <div id="buyToast" class="toast align-items-center text-white bg-primary border-0" role="alert">
+          <div class="d-flex">
+            <div class="toast-body">
+              Товар добавлен в корзину!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+          </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно авторизации -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary justify-content-center">
+              <h5 class="modal-title text-center w-100" id="authModalLabel">Авторизация</h5>
+              <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body px-4">
+              <form id="authForm">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email:</label>
+                  <input type="email" class="form-control bg-secondary text-white border-0" id="email" placeholder="you@example.com" required>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Пароль:</label>
+                  <input type="password" class="form-control bg-secondary text-white border-0" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-auth w-100 mb-3">Войти</button>
+              </form>
+              <div class="text-center">
+                <span class="text-white mt-4">Нет аккаунта?</span>
+                <a href="#" class="text-decoration-none text-info" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно регистрации -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary justify-content-center">
+              <h5 class="modal-title text-center w-100" id="registerModalLabel">Регистрация</h5>
+              <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body px-4">
+              <form id="registerForm">
+                <div class="mb-3">
+                  <label for="regEmail" class="form-label">Email:</label>
+                  <input type="email" class="form-control bg-secondary text-white border-0" id="regEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="mb-3">
+                  <label for="regPassword" class="form-label">Пароль:</label>
+                  <input type="password" class="form-control bg-secondary text-white border-0" id="regPassword" placeholder="••••••••" required>
+                </div>
+                <div class="mb-3">
+                  <label for="regPasswordConfirm" class="form-label">Повторите пароль:</label>
+                  <input type="password" class="form-control bg-secondary text-white border-0" id="regPasswordConfirm" placeholder="••••••••" required>
+                </div>
+                <div id="registerError" class="text-danger mt-2"></div>
+                <button type="submit" class="btn btn-auth w-100">Зарегистрироваться</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно корзины -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary">
+              <h5 class="modal-title" id="cartModalLabel">Корзина</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body px-4 pb-4">
+              <p class="text-white mt-4">Ваша корзина пока пуста. Добавьте товары для оформления заказа.</p>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      /*
+      обработчики форм:
+      1. Форма авторизации - показывает приветственное сообщение
+      2. Форма регистрации - проверяет совпадение паролей
+      3. Кнопки покупки - показывают уведомление
+      */
+      
+      // Обработчик формы авторизации
+      document.getElementById('authForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Отменяю стандартную отправку формы
+        
+        // toast-уведомление
+        let toast = new bootstrap.Toast(document.getElementById('welcomeToast'));
+        
+        // Закрываю модальное окно
+        let modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+        
+        modal.hide();
+        toast.show();
+      });
+      // Обработчик формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+         e.preventDefault();
+      // проверка на совпад. паролей
+        let pass = document.getElementById('regPassword').value;
+        let confirm = document.getElementById('regPasswordConfirm').value;
+        let errorDiv = document.getElementById('registerError');
+
+        if (pass !== confirm) {
+       errorDiv.textContent = "Пароли не совпадают!";
+       return;
+       }
+
+    // Очистка сообщения об ошибке при успешной проверке
+        errorDiv.textContent = "";
+
+       let toast = new bootstrap.Toast(document.getElementById('welcomeToast'));
+        let modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+  
+        modal.hide();
+        toast.show();
+       });
+
+
+      // Обработчики для всех кнопок покупки
+      document.querySelectorAll('.btn-buy').forEach(button => {
+        button.addEventListener('click', function () {
+          // Показываю уведомление о добавлении в корзину
+          let toast = new bootstrap.Toast(document.getElementById('buyToast'));
+          toast.show();
+        });
+      });
+    </script>
+</body>
+</html>

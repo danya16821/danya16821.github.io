@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DarkFrame – Каталог игровых ПК</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    body {
+      background-color: #0d0b1d; 
+      color: #fff; 
+      font-family: 'Open Sans', sans-serif; /* Шрифт по умолчанию */
+    }
+
+    /* 
+    Стилизую навигационную панель:
+    - Тёмный фон с фиолетовыми акцентами
+    - Гибкое расположение элементов
+    - Адаптация под мобильные устройства
+    */
+    .custom-navbar {
+      background-color: #1a1a2e; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 40px;
+      flex-wrap: wrap;
+    }
+
+    /* Располагаю ссылки в навигации с отступами */
+    .nav-left,
+    .nav-right {
+      display: flex;
+      gap: 20px;
+    }
+
+    /* 
+    Центральный логотип с эффектом "плавающей" панели
+    Использую шрифт Audiowide для геймерского стиля
+    */
+    .nav-center {
+      background-color: #222246;
+      padding: 8px 40px;
+      border-radius: 0 0 20px 20px;
+      font-family: 'Audiowide', cursive;
+      font-size: 1.8rem;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    /* Стили для навигационных ссылок с эффектом при наведении */
+    .nav-link-custom {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    /* Эффект при наведении - фиолетовый цвет */
+    .nav-link-custom:hover {
+      color: #6f42c1;
+    }
+
+    /* Отступ для иконки пользователя */
+    .bi-person-circle {
+      margin-right: 5px;
+    }
+
+    /* 
+    Адаптация навигации для мобильных устройств:
+    - Вертикальное расположение элементов
+    - Центрирование содержимого
+    */
+    @media (max-width: 991px) {
+      .custom-navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 20px;
+      }
+      .nav-left,
+      .nav-right {
+        justify-content: center;
+        margin: 10px 0;
+        flex-wrap: wrap;
+      }
+    }
+    
+    /* Стили для кнопки авторизации */
+    .btn-auth {
+      background-color: #6f42c1;
+      border: none;
+      color: #fff;
+      margin-top: auto;
+    }
+
+    /* Эффект при наведении на кнопку */
+    .btn-auth:hover {
+      background-color: #5936a2;
+    }
+
+    /* Стиль подвала сайта */
+    .footer {
+      background-color: #1a162e;
+      color: #888;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+    
+    /* Контейнер для всплывающих уведомлений */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1055;
+    }
+
+    /* Стиль для placeholder в полях ввода */
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    /* 
+    Стили для карусели с изображениями:
+    - Закруглённые углы
+    - Неоновая тень для эффекта подсветки
+    - Фиксированная высота изображений
+    */
+    .carousel {
+      margin-top: 60px;
+      margin-bottom: 60px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .carousel-image {
+      height: 500px;
+      object-fit: cover;
+      object-position: center;
+      width: 100%;
+    }
+    
+    /* Стили для секции с примерами работ */
+    .examples-section {
+      margin-top: 60px;
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    .divider {
+      border-top: 1px solid #ccc;
+      margin-bottom: 40px;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Карточки примеров работ */
+    .example-card {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+    }
+
+    .example-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      object-position: center;
+    }
+    
+    /* Стили для секции поддержки */
+    .support-section {
+      margin-top: 60px;
+      margin-bottom: 60px;
+    }
+
+    /* Карточки поддержки с эффектом увеличения при наведении */
+    .support-card {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .support-card:hover {
+      transform: scale(1.03);
+    }
+
+    .support-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+
+    /* 
+    Стили для карты Google:
+    - Тёмная тема с помощью CSS-фильтров
+    - Убираю стандартную рамку
+    */
+    .dark-map {
+      filter: grayscale(30%) invert(90%) hue-rotate(180deg) contrast(85%) brightness(0.8);
+      border: none !important;
+    }
+
+    /* Контейнер для карты с тенями и скруглёнными углами */
+    .maps-card {
+      overflow: hidden;
+      border: 1px solid #333;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+    .maps-card .card-body {
+    background-color: #3b3b41;
+    }
+
+    /* Стили для секции "О нас" */
+    .about-section {
+      margin-top: 60px;
+      margin-bottom: 60px;
+    }
+
+    /* Карточка с информацией о компании */
+    .about-card {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+      padding: 20px;
+    }
+
+    /* Отступы для контента внутри карточки */
+    .about-content {
+      padding: 0 15px;
+    }
+
+    /* Стили для иконок контактной информации */
+    .contact-info i {
+      color: #6f42c1;
+      width: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+    <!-- 
+    Навигационная панель сайта:
+    - Логотип по центру
+    - Основные разделы слева
+    - Корзина и авторизация справа
+    -->
+    <header class="custom-navbar">
+        <!-- Левая часть с ссылками на основные разделы -->
+        <div class="nav-left">
+          <a href="sborki.html" class="nav-link-custom">Сборки</a>
+          <a href="#support" class="nav-link-custom">Поддержка</a>
+          <a href="#about" class="nav-link-custom">О нас</a>
+        </div>
+      
+        <!-- Центральный логотип с ссылкой на главную -->
+        <a href="main.html" class="nav-center">
+          DarkFrame
+        </a>
+      
+        <!-- Правая часть с корзиной и авторизацией -->
+        <div class="nav-right">
+          <a href="#" class="nav-link-custom" data-bs-toggle="modal" data-bs-target="#cartModal">Корзина</a>
+          
+          <a href="#" class="nav-link-custom" data-bs-toggle="modal" data-bs-target="#authModal">
+            <i class="bi bi-person-circle"></i>Авторизация
+          </a>
+        </div>
+    </header>
+
+    <!-- 
+    Карусель(слайды) с изображениями:
+    - Автоматическое перелистывание каждые 1.5 секунды
+    - Индикаторы текущего слайда
+    - Кнопки навигации
+    -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="1500">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="photo/slide1.jpg" class="d-block w-100 carousel-image" alt="PC1">
+              </div>
+              <div class="carousel-item">
+                <img src="photo/slide2.jpg" class="d-block w-100 carousel-image" alt="PC2">
+              </div>
+              <div class="carousel-item">
+                <img src="photo/slide3.jpg" class="d-block w-100 carousel-image" alt="PC3">
+              </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Предыдущий</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Следующий</span>
+        </button>
+    </div>
+
+    <!-- Секция с примерами работ - 3 карточки с изображениями -->
+    <div class="examples-section container text-center my-5">
+        <h2 class="section-title">Примеры наших работ</h2>
+        <hr class="divider">
+        <div class="row justify-content-center">
+          <div class="col-md-4 mb-4">
+            <div class="card example-card">
+              <img src="photo/PC1.jpg" class="card-img-top" alt="Пример 1">
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="card example-card">
+              <img src="photo/PC2.jpg" class="card-img-top" alt="Пример 2">
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="card example-card">
+              <img src="photo/PC3.jpg" class="card-img-top" alt="Пример 3">
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Секция поддержки с якорем для навигации -->
+    <div class="support-section container text-center my-5" id="support">
+        <h2 class="section-title">Поддержка</h2>
+        <hr class="divider">
+        <div class="row justify-content-center">
+          <div class="col-md-4 mb-4">
+            <div class="card support-card">
+              <img src="photo/faq.jpg" class="card-img-top" alt="Частые вопросы">
+              <div class="card-body">
+                <h5 class="card-title text-white">Частые вопросы</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="card support-card">
+              <img src="photo/onchat.jpg" class="card-img-top" alt="Онлайн-чат">
+              <div class="card-body">
+                <h5 class="card-title text-white">Онлайн-чат</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="card support-card">
+              <img src="photo/feedback.jpg" class="card-img-top" alt="Обратная связь">
+              <div class="card-body">
+                <h5 class="card-title text-white">Обратная связь</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Секция с картой Google с тёмной темой -->
+    <div class="maps-section container text-center my-5">
+        <h2 class="section-title">Мы на картах</h2>
+        <hr class="divider">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="card maps-card p-0">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2819.065313500691!2d38.97785631554482!3d45.04044497909824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40f04f9a5cb9f3a9%3A0x7d1a1e6b1a9a0e0e!2z0YPQuy4g0JrQvtC80YHQu9Cw0YDQvtCyLCAyODAsINCa0YDQsNGB0L3QsNGPINC60YDQsNGB0L3QsNGPLCDQoNC-0YHRgdC40Y8sIDM1MDAyMA!5e0!3m2!1sru!2sru!4v1620000000000!5m2!1sru!2sru" 
+                width="100%" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy"
+                class="dark-map"
+              ></iframe>
+              <div class="card-body">
+                <h5 class="card-title text-white mt-4">Наш офис</h5>
+                <p class="text-white mt-4">ул. Коммунаров, 280, этаж 1, Краснодар</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <!-- Секция "О нас" с якорем для навигации -->
+    <div class="about-section container text-center my-5" id="about">
+        <h2 class="section-title">О нас</h2>
+        <hr class="divider">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="card about-card">
+              <div class="card-body">
+                <h3 class="card-title text-white mb-4">DarkFrame - Качественные игровые ПК</h3>
+                <div class="about-content text-start">
+                  <p class="text-white mt-4">Мы - команда энтузиастов, создающая мощные игровые компьютеры с 2007 года. Наш магазин в Краснодаре предлагает лучшие решения для геймеров и профессионалов.</p>
+                  
+                  <h5 class="text-white mt-4">Наши преимущества:</h5>
+                  <ul class="text-white mt-4">
+                    <li>Индивидуальный подход к каждому клиенту</li>
+                    <li>Только качественные комплектующие от проверенных производителей</li>
+                    <li>Профессиональная сборка и тестирование всех систем</li>
+                    <li>Гарантия на все сборки - 3 года</li>
+                    <li>Бесплатная техническая поддержка</li>
+                  </ul>
+                  
+                  <h5 class="text-white mt-4">Контакты:</h5>
+                  <div class="contact-info text-white mt-4">
+                    <p><i class="bi bi-geo-alt-fill me-2"></i>ул. Коммунаров, 280, этаж 1, Краснодар</p>
+                    <p><i class="bi bi-telephone-fill me-2"></i>+7 (861) 123-45-67</p>
+                    <p><i class="bi bi-envelope-fill me-2"></i>info@darkframe.ru</p>
+                    <p><i class="bi bi-clock-fill me-2"></i>Пн-Пт: 10:00 - 20:00, Сб-Вс: 11:00 - 18:00</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- футер -->
+    <div class="footer">
+        © 2023–2025 DarkFrame. Все права защищены.
+    </div>
+
+    <!-- Контейнер для всплывающих уведомлений -->
+    <div class="toast-container">
+        <div id="welcomeToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+          <div class="d-flex">
+            <div class="toast-body">
+              Добро пожаловать!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+          </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно авторизации -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary justify-content-center">
+              <h5 class="modal-title text-center w-100" id="authModalLabel">Авторизация</h5>
+              <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body px-4">
+              <form id="authForm">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email:</label>
+                  <input type="email" class="form-control bg-secondary text-white border-0" id="email" placeholder="you@example.com" required>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Пароль:</label>
+                  <input type="password" class="form-control bg-secondary text-white border-0" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-auth w-100 mb-3">Войти</button>
+              </form>
+              <div class="text-center">
+                <span class="text-white mt-4">Нет аккаунта?</span>
+                <a href="#" class="text-decoration-none text-info" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно регистрации -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary justify-content-center">
+              <h5 class="modal-title text-center w-100" id="registerModalLabel">Регистрация</h5>
+              <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body px-4">
+              <form id="registerForm">
+                <div class="mb-3">
+                  <label for="regEmail" class="form-label">Email:</label>
+                  <input type="email" class="form-control bg-secondary text-white border-0" id="regEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="mb-3">
+                  <label for="regPassword" class="form-label">Пароль:</label>
+                  <input type="password" class="form-control bg-secondary text-white border-0" id="regPassword" placeholder="••••••••" required>
+                </div>
+                <div class="mb-3">
+                  <label for="regPasswordConfirm" class="form-label">Повторите пароль:</label>
+                  <input type="password" class="form-control bg-secondary text-white border-0" id="regPasswordConfirm" placeholder="••••••••" required>
+                </div>
+                <div id="registerError" class="text-danger mt-2"></div>
+                <button type="submit" class="btn btn-auth w-100">Зарегистрироваться</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно корзины -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary">
+              <h5 class="modal-title" id="cartModalLabel">Корзина</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body px-4 pb-4">
+              <p class="text-white mt-4">Ваша корзина пока пуста. Добавьте товары для оформления заказа.</p>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      /*
+      обработчики форм:
+      1. Форма авторизации - показывает приветственное сообщение
+      2. Форма регистрации - проверяет совпадение паролей
+      */
+      
+      // Обработчик формы авторизации
+      document.getElementById('authForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Отменяю стандартную отправку формы
+        
+        // toast-уведомление
+        let toast = new bootstrap.Toast(document.getElementById('welcomeToast'));
+        
+        // Закрываю модальное окно
+        let modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+        
+        modal.hide();
+        toast.show();
+      });
+
+      // Обработчик формы регистрации
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+      // проверка на совпад. паролей
+    let pass = document.getElementById('regPassword').value;
+    let confirm = document.getElementById('regPasswordConfirm').value;
+    let errorDiv = document.getElementById('registerError');
+
+    if (pass !== confirm) {
+    errorDiv.textContent = "Пароли не совпадают!";
+    return;
+    }
+
+    // Очистка сообщения об ошибке при успешной проверке
+    errorDiv.textContent = "";
+
+    let toast = new bootstrap.Toast(document.getElementById('welcomeToast'));
+    let modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+  
+    modal.hide();
+    toast.show();
+    });
+
+
+    </script>
+</body>
+</html>
